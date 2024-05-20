@@ -1,0 +1,16 @@
+- name: set hostname
+  ansible.builtin.hostname:
+    name: vps.spiraweb.pl
+    use: systemd
+
+- name: localhost
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: 127.0.0.1 localhost.localdomain localhost
+
+- name: vps.spiraweb.pl
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: 40.69.209.193 vps.spiraweb.pl vps
+
+
