@@ -1,0 +1,7 @@
+---
+- name: Add Google DNS to /etc/resolv.conf
+  lineinfile:
+    path: /etc/resolv.conf
+    state: present
+    line: "nameserver 8.8.8.8"
+    insertbefore: BOF
