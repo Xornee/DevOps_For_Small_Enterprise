@@ -1,0 +1,46 @@
+---
+    - name: Update the apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Install packages
+      ansible.builtin.apt:
+        name:
+          - build-essential  # Group of packages used for compiling
+          - bat              # 'cat' replacement written in rust
+          - fd-find          # 'find' replacement written in rust
+          - fzf              # A command line fuzzy finder
+          - git              # SCM
+          - htop             # Interactive system monitor
+          - iotop            # Disk and IO monitoring
+          - lm-sensors       # Provides tools and drivers for monitoring temperatures, voltage, etc.
+          - man-db           # Manual pages
+          - manpages         # Manual pages
+          - p7zip-full       # Command line port of 7-Zip
+          - plocate          # Unix tool for finding files quickly
+          - ripgrep          # Grep replacement written in rust
+          - smartmontools    # Provides disk health status
+          - sudo             # Run commands as root or another user
+          - zsh              # Unix shell, alternative to bash
+        state: present
+
+    - name: Ensure plocate-updatedb.timer is started and enabled at boot
+      ansible.builtin.systemd:
+        name: plocate-updatedb.timer
+        state: started
+        enabled: yes
+
+    - name: Symlink vi to vim
+      ansible.builtin.file:
+        src: /usr/bin/vim
+        dest: /usr/bin/vi
+        state: link
+
+    - name: Create scripts directory
+      ansible.builtin.file:
+        path: /root/scripts
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+

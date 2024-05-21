@@ -5,3 +5,5 @@
     state: present
     line: "nameserver 8.8.8.8"
     insertbefore: BOF
+
+- include_tasks: packages.yml
