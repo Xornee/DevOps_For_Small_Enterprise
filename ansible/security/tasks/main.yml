@@ -1,0 +1,14 @@
+- name: Install iptables-persistent package
+  ansible.builtin.apt:
+    name: iptables-persistent
+    state: present
+    update_cache: yes
+
+- name: Ensure netfilter-persistent is started and enabled at boot
+  ansible.builtin.systemd:
+    name: netfilter-persistent
+    state: started
+    enabled: yes
+
+- include_tasks: sshd.yml
+- include_tasks: iptables.yml
