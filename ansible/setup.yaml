@@ -4,7 +4,7 @@
     - hostname
     - essentials
     - security
-
+    - sysctl
   handlers:
     - name: restart systemd-networkd
       ansible.builtin.systemd:
