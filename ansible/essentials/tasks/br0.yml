@@ -1,0 +1,18 @@
+---
+- name: Copy br0.netdev configuration
+  ansible.builtin.copy:
+    src: files/br0.netdev
+    dest: /etc/systemd/network/br0.netdev
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart systemd-networkd
+
+- name: Copy br0.network configuration
+  ansible.builtin.copy:
+    src: files/br0.network
+    dest: /etc/systemd/network/br0.network
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart systemd-networkd

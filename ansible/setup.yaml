@@ -3,3 +3,9 @@
   roles:
     - hostname
     - essentials
+
+  handlers:
+    - name: restart systemd-networkd
+      ansible.builtin.systemd:
+        name: systemd-networkd
+        state: restarted

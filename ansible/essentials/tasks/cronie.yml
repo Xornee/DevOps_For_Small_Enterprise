@@ -1,0 +1,12 @@
+- name: Install cron
+  ansible.builtin.apt:
+    update_cache: yes
+    name:
+      - cron
+    state: present
+
+- name: Ensure cron is started and enabled at boot
+  ansible.builtin.systemd:
+    name: cron
+    state: started
+    enabled: yes

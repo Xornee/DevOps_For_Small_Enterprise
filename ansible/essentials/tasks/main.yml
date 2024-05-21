@@ -6,4 +6,18 @@
     line: "nameserver 8.8.8.8"
     insertbefore: BOF
 
+- name: Enable and start systemd-networkd
+  ansible.builtin.systemd:
+    name: systemd-networkd
+    state: started
+    enabled: yes
+
+- name: Enable and start systemd-resolved
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    state: started
+    enabled: yes
+
 - include_tasks: packages.yml
+- include_tasks: cronie.yml
+- include_tasks: br0.yml
