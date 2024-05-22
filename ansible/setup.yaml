@@ -1,10 +1,11 @@
 - hosts: main
   become: true
   roles:
-    - hostname
-    - essentials
-    - security
-    - sysctl
+    #- hostname
+    #- essentials
+    #- security
+    #- sysctl
+    - certbot
   handlers:
     - name: restart systemd-networkd
       ansible.builtin.systemd:
