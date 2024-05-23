@@ -1,12 +1,13 @@
 - hosts: main
   become: true
   roles:
-    #- hostname
-    #- essentials
+    - hostname
+    - essentials
     - security
-    #- sysctl
-    #- certbot
-    #- wireguard
+    - sysctl
+    - certbot
+    - wireguard
+    - docker
   handlers:
     - name: restart systemd-networkd
       ansible.builtin.systemd:

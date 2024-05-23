@@ -1,0 +1,17 @@
+---
+- name: Register current Docker Compose version
+  ansible.builtin.shell: docker compose version --short
+  register: docker_compose_current_version
+
+- name: Register latest version
+  ansible.builtin.shell: curl --silent "https://api.github.com/repos/docker/compose/releases/latest" | jq -r '.tag_name'
+  args:
+    warn: false
+  register: docker_compose_version
+
+- name: Install Docker Compose V2
+  ansible.builtin.get_url:
+    url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version.stdout }}/docker-compose-linux-x86_64"
+    dest: /usr/local/bin/docker-compose
+    mode: '0755'
+  when: docker_compose_version.stdout != docker_compose_current_version.stdout
