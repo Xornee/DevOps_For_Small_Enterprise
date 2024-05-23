@@ -1,0 +1,22 @@
+---
+- name: Install WireGuard tools on Debian
+  ansible.builtin.apt:
+    update_cache: yes
+    name: wireguard-tools
+    state: present
+
+- name: Copy WireGuard configuration file
+  ansible.builtin.copy:
+    src: files/wg-spiraweb.conf
+    dest: /etc/wireguard/wg-spiraweb.conf
+    owner: root
+    group: root
+    mode: '0600'
+  notify: restart wg-spiraweb
+
+- name: Ensure wg-quick@wg-spiraweb.service is started and enabled at boot
+  ansible.builtin.systemd:
+    name: wg-quick@wg-spiraweb.service
+    state: started
+    enabled: yes
+

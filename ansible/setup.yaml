@@ -3,9 +3,10 @@
   roles:
     #- hostname
     #- essentials
-    #- security
+    - security
     #- sysctl
-    - certbot
+    #- certbot
+    #- wireguard
   handlers:
     - name: restart systemd-networkd
       ansible.builtin.systemd:
