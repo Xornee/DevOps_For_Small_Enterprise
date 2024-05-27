@@ -1,0 +1,24 @@
+---
+- name: Install packages
+  ansible.builtin.apt:
+    update_cache: yes
+    name:
+      - lxc
+      - debootstrap
+    state: present
+
+- name: Copy default.conf
+  ansible.builtin.copy:
+    src: files/default.conf
+    dest: /etc/lxc/default.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Create backups directory
+  ansible.builtin.file:
+    path: /mnt/storage/backups/lxc
+    owner: root
+    group: root
+    mode: '0700'
+    state: directory

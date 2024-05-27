@@ -1,14 +1,15 @@
 - hosts: main
   become: true
   roles:
-    - hostname
-    - essentials
-    - security
-    - sysctl
-    - certbot
-    - wireguard
-    - docker
-    - mariadb
+    #- hostname
+    #- essentials
+    #- security
+    #- sysctl
+    #- certbot
+    #- wireguard
+    #- docker
+    #- mariadb
+    - lxc
   handlers:
     - name: restart systemd-networkd
       ansible.builtin.systemd:
