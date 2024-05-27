@@ -1,0 +1,80 @@
+---
+- name: Check if MariaDB is initialized
+  stat:
+    path: /root/mariadb_initialized_true
+  ignore_errors: true
+  register: mariadb_initialized_true
+
+- name: Install MariaDB
+  ansible.builtin.apt:
+    update_cache: yes
+    name:
+      - mariadb-server
+      - python3-pymysql
+    state: present
+
+- name: Initialize MariaDB
+  ansible.builtin.shell: "mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql"
+  when: mariadb_initialized_true.stat.exists == false
+
+- name: Ensure MariaDB is started and enabled at boot
+  ansible.builtin.systemd:
+    name: mariadb
+    state: started
+    enabled: yes
+
+- name: Set root user password
+  community.mysql.mysql_user:
+    login_user: root
+    login_unix_socket: "/run/mysqld/mysqld.sock"
+    name: root
+    password: "{{ mariadb_root_password }}"
+    host_all: yes
+    state: present
+  no_log: true
+  when: mariadb_initialized_true.stat.exists == false
+
+- name: Remove anonymous user account
+  community.mysql.mysql_user:
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+    name: ""
+    host_all: yes
+    state: absent
+    login_unix_socket: "/run/mysqld/mysqld.sock"
+  no_log: true
+  when: mariadb_initialized_true.stat.exists == false
+
+- name: Set up databases
+  include_tasks: databases.yml
+
+- name: Set up users
+  include_tasks: users.yml
+
+- name: Backup script
+  ansible.builtin.copy:
+    src: files/mariadb-dump-all-databases.sh
+    dest: /root/scripts/mariadb-dump-all-databases.sh
+    owner: root
+    group: root
+    mode: '0700'
+
+- name: Add backup to crontab
+  ansible.builtin.cron:
+    name: mariadb dump all databases
+    minute: "01"
+    hour: "3"
+    user: root
+    job: "/root/scripts/mariadb-dump-all-databases.sh > /dev/null 2>&1"
+
+- name: Create mariadb_initialized_true
+  ansible.builtin.file:
+    path: /root/mariadb_initialized_true
+    state: touch
+  when: mariadb_initialized_true.stat.exists == false
+
+- name: Set immutable attribute
+  ansible.builtin.file:
+    path: /root/mariadb_initialized_true
+    attributes: i
+  when: mariadb_initialized_true.stat.exists == false

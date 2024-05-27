@@ -8,6 +8,7 @@
     - certbot
     - wireguard
     - docker
+    - mariadb
   handlers:
     - name: restart systemd-networkd
       ansible.builtin.systemd:
