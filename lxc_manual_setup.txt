@@ -1,0 +1,63 @@
+This file shows configuring LXC as it is very hard to automate 
+
+mkdir lxc 
+
+root@vps:~/lxc# lxc-create --dir=/root/lxc/mail.spiraweb.pl -n mail.spiraweb.pl -t download -- -d ubuntu -r jammy -a amd64
+
+vi /var/lib/lxc/mail.spiraweb.pl/config
+
+At the end add this 
+
+lxc.net.0.ipv4.address = 10.100.100.11/24
+
+lxc-start mail.spiraweb.pl
+
+lxc-attach mail.spiraweb.pl
+
+apt remove netplan.io -y
+
+systemctl reboot 
+
+iptables -t nat -A POSTROUTING -s 10.100.100.0/24 -o eth0 -j MASQUERADE (set this in ip tables ansible config )
+
+lxc-attach mail.spiraweb.pl --clear-env
+
+ls -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf 
+
+mkdir /etc/systemd/resolved.conf.d
+
+vi /etc/systemd/resolved.conf.d/override.conf
+
+```
+[Resolve]
+DNS=1.1.1.1
+FallbackDNS=1.0.0.1
+```
+
+systemctl restart systemd-resolved
+
+apt update && apt upgrade
+
+apt install openssh-server -y 
+
+mkdir .ssh
+
+chmod 700 .ssh/
+
+cat >> ~/.ssh/authorized_keys <<EOM
+<key here>
+EOM
+
+-----
+
+This file on laptop (Connecting with wireguard)
+
+cat >> ~/.ssh/config << EOM 
+Host mail.spiraweb.pl
+	User root 
+	Hostname 10.100.100.11
+	ProxyCOmmand ssh -W %h:%p spiraweb.pl
+EOM
+-----
+
+
