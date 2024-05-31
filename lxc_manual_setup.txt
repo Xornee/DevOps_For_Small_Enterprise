@@ -60,4 +60,19 @@ Host mail.spiraweb.pl
 EOM
 -----
 
+vi /etc/hosts
 
+edit it like this on the beginning 
+
+127.0.1.1       mail.spiraweb.pl
+127.0.0.1       mail.spiraweb.pl mail localhost
+
+
+latest iRedMail release https://github.com/iredmail/iRedMail/archive/refs/tags/1.6.8.tar.gz
+wget https://github.com/iredmail/iRedMail/archive/refs/tags/1.6.8.tar.gz
+
+mv 1.6.8.tar.gz iRedMail-1.6.8.tar.gz
+tar zxf iRedMail-1.6.8.tar.gz 
+cd iRedMail-1.6.8
+bash iRedMail.sh 
+(Y|Y)
