@@ -76,3 +76,24 @@ tar zxf iRedMail-1.6.8.tar.gz
 cd iRedMail-1.6.8
 bash iRedMail.sh 
 (Y|Y)
+
+-------
+
+After creating cert 
+
+lxc.mount.entry = /etc/letsencrypt/live/mail.spiraweb.pl etc/letsencrypt/live/mail.spiraweb.pl none defaults,bind,create=dir 0 0
+lxc.mount.entry = /etc/letsencrypt/archive/mail.spiraweb.pl etc/letsencrypt/archive/mail.spiraweb.pl none defaults,bind,create=dir 0 0
+
+Then backup postfix conf and edit main.cf
+
+comment TLS and cert and add this 
+
+smtpd_tls_key_file = /etc/letsencrypt/live/mail.spiraweb.pl/privkey.pem
+smtpd_tls_cert_file = /etc/letsencrypt/live/mail.spiraweb.pl/fullchain.pem
+smtpd_tls_CAfile = /etc/letsencrypt/live/mail.spiraweb.pl/fullchain.pem
+
+same with dovecot 
+
+ssl_cert = </etc/letsencrypt/live/mail.spiraweb.pl/fullchain.pem
+ssl_key = </etc/letsencrypt/live/mail.spiraweb.pl/privkey.pem
+

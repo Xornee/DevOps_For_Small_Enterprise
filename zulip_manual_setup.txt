@@ -1,0 +1,32 @@
+mkdir /root/lxc/zulip.spiraweb.pl
+
+lxc-create --dir=/root/lxc/zulip.spiraweb.pl -n zulip.spiraweb.pl -t download -- -d ubuntu -r jammy -a amd64
+
+vi /var/lib/lxc/zulip.spiraweb.pl/config 
+
+lxc.net.0.ipv4.address = 10.100.100.12/24
+
+lxc-start zulip.spiraweb.pl 
+lxc-ls -f
+lxc-attach zulip.spiraweb.pl --clear-env
+
+root@zulip:/root# ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf 
+root@zulip:/root# mkdir /etc/systemd/resolved.conf.d
+root@zulip:/root# vi  /etc/systemd/resolved.conf.d/overrite.conf
+
+[Resolve]
+DNS=1.1.1.1
+FallbackDNS=1.0.0.1
+
+systemctl restart systemd-resolved
+
+apt update && apt upgrade
+
+apt-get install openssh-server -y
+
+root@zulip:/root# mkdir .ssh                       
+root@zulip:/root# chmod 700 .ssh
+
+cat >> ~/.ssh/authorized_keys <<EOM
+<key>
+EOM
